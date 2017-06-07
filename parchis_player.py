@@ -3,6 +3,7 @@ import sys
 import time
 import pygame
 import threading
+import random
 
 class Player:
     def __init__(self):
@@ -28,6 +29,77 @@ class Player:
             except:
                 print "AN ERROR HAS OCURRED"
         self.sock.close()
+    
+    def Throw_dice(screen, cordx, cordy):
+
+        diceimg1 = pygame.image.load("img/dado1.png").convert_alpha()
+        diceimg2 = pygame.image.load("img/dado2.png").convert_alpha()
+        diceimg3 = pygame.image.load("img/dado3.png").convert_alpha()
+        diceimg4 = pygame.image.load("img/dado4.png").convert_alpha()
+        diceimg5 = pygame.image.load("img/dado5.png").convert_alpha()
+        diceimg6 = pygame.image.load("img/dado6.png").convert_alpha()
+
+        dice1 = random.randint(1,6)
+        dice2 = random.randint(1,6)
+    
+        for i in range (2):
+            screen.blit(diceimg1,(cordx, cordy))
+            screen.blit(diceimg5, (cordx+70, cordy))
+            time.sleep(0.2)
+            pygame.display.flip()
+            screen.blit(diceimg2,(cordx, cordy))
+            screen.blit(diceimg4, (cordx+70, cordy))
+            time.sleep(0.2)
+            pygame.display.flip()
+            screen.blit(diceimg3,(cordx, cordy))
+            screen.blit(diceimg1, (cordx+70, cordy))
+            time.sleep(0.2)
+            pygame.display.flip()
+            screen.blit(diceimg4,(cordx, cordy))
+            screen.blit(diceimg2, (cordx+70, cordy))
+            time.sleep(0.2)
+            pygame.display.flip()
+            screen.blit(diceimg5,(cordx, cordy))
+            screen.blit(diceimg6, (cordx+70, cordy))
+            time.sleep(0.2)
+            pygame.display.flip()
+            screen.blit(diceimg6,(cordx, cordy))
+            screen.blit(diceimg3, (cordx+70, cordy))
+            time.sleep(0.2)
+            pygame.display.flip()
+
+        if (dice1==1):
+            screen.blit(diceimg1, (cordx, cordy))
+        if (dice1==2):
+            screen.blit(diceimg2, (cordx, cordy))
+        if (dice1==3):
+            screen.blit(diceimg3, (cordx, cordy))
+        if (dice1==4):
+            screen.blit(diceimg4, (cordx, cordy))
+        if (dice1==5):
+            screen.blit(diceimg5, (cordx, cordy))
+        if (dice1==6):
+            screen.blit(diceimg6, (cordx, cordy))
+
+        if (dice2==1):
+            screen.blit(diceimg1, (cordx+70, cordy))
+        if (dice2==2):
+            screen.blit(diceimg2, (cordx+70, cordy))
+        if (dice2==3):
+            screen.blit(diceimg3, (cordx+70, cordy))
+        if (dice2==4):
+            screen.blit(diceimg4, (cordx+70, cordy))
+        if (dice2==5):
+            screen.blit(diceimg5, (cordx+70, cordy))
+        if (dice2==6):
+            screen.blit(diceimg6, (cordx+70, cordy))
+            
+        pygame.display.flip()
+
+        dice_value[0]=dice1
+        dice_value[1]=dice2
+        
+        return fichas_dados
 
 def load_color_images(screen):
     red = pygame.image.load("img/rojo.png").convert()
@@ -141,6 +213,25 @@ def main():
                 except:
                     print "ERROR SELCTING COLOR"
                 player.sock.sendall(selected_color)
+                player.data_received_server = []
+                
+            elif player.data_received_server[0] == 'repeated_color':
+                print "REPEATED COLOR MESSAGE"
+                selected_color = select_color()
+                player.sock.sendall(selected_color)
+                player.data_received_server = []
+                
+           elif player.data_received_server[0] == 'throw_dice_ft':
+                print "THROW DICE FT MESSAGE"
+                try:
+                    screen = pygame.display.set_mode((415, 200))
+                    pygame.display.set_caption("Throw dice")
+                    pygame.init()
+                    dice_ft = Throw_dice(screen, 130, 70)
+                    pygame.quit()
+                except:
+                    print "ERROR SELCTING COLOR"
+                player.sock.sendall(dice_ft)
                 player.data_received_server = []
                 
         

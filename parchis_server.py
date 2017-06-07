@@ -23,6 +23,7 @@ class TimeServer:
         self.connection_list = []
         self.players_list = {}
         self.players_color_list = {}
+        self.players_first_turn = {}
         
     def init_server(self):
         print "SERVER: Wating players {0} {1}".format(self.host, self.port)
@@ -90,13 +91,23 @@ class TimeServer:
                 player_sock.send("get_color ")
                 player_color = player_sock.recv(1024)
                 while player_color in self.players_color_list:
-                    player_sock.send("repeated_color")
+                    player_sock.send("repeated_color ")
                     player_color = player_sock.recv(1024)
                 self.players_color_list.update({username:player_color})
                 
         print "SERVER: Players color list: "
         for username, player_color in self.players_color_list.iteritems():
             print "\t* ", player_color
+            
+        for username, player_sock in self.players_list.iteritems():
+            if player_sock != self.server_sock:
+                player_sock.send("throw_dice_ft ")
+                dice_ft = player_sock.recv(1024)
+                self.players_first_turn.update({username:dice_ft})
+                
+        print "SERVER: Players color list: "
+        for username, player_dice_ft in self.players_first_turn.iteritems():
+            print "\t* ", player_dice_ft
 
         
         #~ ack = ""
