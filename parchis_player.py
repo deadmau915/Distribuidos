@@ -4,6 +4,9 @@ import time
 import pygame
 import threading
 import random
+import pickle
+
+WINDOW_DIMENSIONS = (1100, 768)
 
 class Player:
     def __init__(self):
@@ -11,6 +14,13 @@ class Player:
         self.game_switch = True
         self.username = ""
         self.data_received_server = ""
+        self.color = ""
+        self.username = ""
+        self.have_shift = False
+        self.firts_time_injail = True
+        self.allplayers_pieces_list = []
+        self.board_map = []
+        self.allplayers_piecesimg_list = []
 
     def connect(self, host, port):
         print "CONNECTING TO {0} {1}".format(host, port)
@@ -30,76 +40,87 @@ class Player:
                 print "AN ERROR HAS OCURRED"
         self.sock.close()
     
-    def Throw_dice(screen, cordx, cordy):
-
+    def throw_dice(self, screen, cordx, cordy):
+        
         diceimg1 = pygame.image.load("img/dado1.png").convert_alpha()
         diceimg2 = pygame.image.load("img/dado2.png").convert_alpha()
         diceimg3 = pygame.image.load("img/dado3.png").convert_alpha()
         diceimg4 = pygame.image.load("img/dado4.png").convert_alpha()
         diceimg5 = pygame.image.load("img/dado5.png").convert_alpha()
         diceimg6 = pygame.image.load("img/dado6.png").convert_alpha()
-
+        
+        screen.blit(diceimg1,(cordx, cordy))
+        screen.blit(diceimg1, (cordx+70, cordy))
+        pygame.display.flip()
         dice1 = random.randint(1,6)
         dice2 = random.randint(1,6)
-    
-        for i in range (2):
-            screen.blit(diceimg1,(cordx, cordy))
-            screen.blit(diceimg5, (cordx+70, cordy))
-            time.sleep(0.2)
-            pygame.display.flip()
-            screen.blit(diceimg2,(cordx, cordy))
-            screen.blit(diceimg4, (cordx+70, cordy))
-            time.sleep(0.2)
-            pygame.display.flip()
-            screen.blit(diceimg3,(cordx, cordy))
-            screen.blit(diceimg1, (cordx+70, cordy))
-            time.sleep(0.2)
-            pygame.display.flip()
-            screen.blit(diceimg4,(cordx, cordy))
-            screen.blit(diceimg2, (cordx+70, cordy))
-            time.sleep(0.2)
-            pygame.display.flip()
-            screen.blit(diceimg5,(cordx, cordy))
-            screen.blit(diceimg6, (cordx+70, cordy))
-            time.sleep(0.2)
-            pygame.display.flip()
-            screen.blit(diceimg6,(cordx, cordy))
-            screen.blit(diceimg3, (cordx+70, cordy))
-            time.sleep(0.2)
-            pygame.display.flip()
-
-        if (dice1==1):
-            screen.blit(diceimg1, (cordx, cordy))
-        if (dice1==2):
-            screen.blit(diceimg2, (cordx, cordy))
-        if (dice1==3):
-            screen.blit(diceimg3, (cordx, cordy))
-        if (dice1==4):
-            screen.blit(diceimg4, (cordx, cordy))
-        if (dice1==5):
-            screen.blit(diceimg5, (cordx, cordy))
-        if (dice1==6):
-            screen.blit(diceimg6, (cordx, cordy))
-
-        if (dice2==1):
-            screen.blit(diceimg1, (cordx+70, cordy))
-        if (dice2==2):
-            screen.blit(diceimg2, (cordx+70, cordy))
-        if (dice2==3):
-            screen.blit(diceimg3, (cordx+70, cordy))
-        if (dice2==4):
-            screen.blit(diceimg4, (cordx+70, cordy))
-        if (dice2==5):
-            screen.blit(diceimg5, (cordx+70, cordy))
-        if (dice2==6):
-            screen.blit(diceimg6, (cordx+70, cordy))
-            
-        pygame.display.flip()
-
-        dice_value[0]=dice1
-        dice_value[1]=dice2
+        unleashed_dice = True
         
-        return fichas_dados
+        while unleashed_dice:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        unleashed_dice = False
+                        for i in range (2):
+                            screen.blit(diceimg1,(cordx, cordy))
+                            screen.blit(diceimg5, (cordx+70, cordy))
+                            time.sleep(0.1)
+                            pygame.display.flip()
+                            screen.blit(diceimg2,(cordx, cordy))
+                            screen.blit(diceimg4, (cordx+70, cordy))
+                            time.sleep(0.1)
+                            pygame.display.flip()
+                            screen.blit(diceimg3,(cordx, cordy))
+                            screen.blit(diceimg1, (cordx+70, cordy))
+                            time.sleep(0.1)
+                            pygame.display.flip()
+                            screen.blit(diceimg4,(cordx, cordy))
+                            screen.blit(diceimg2, (cordx+70, cordy))
+                            time.sleep(0.1)
+                            pygame.display.flip()
+                            screen.blit(diceimg5,(cordx, cordy))
+                            screen.blit(diceimg6, (cordx+70, cordy))
+                            time.sleep(0.1)
+                            pygame.display.flip()
+                            screen.blit(diceimg6,(cordx, cordy))
+                            screen.blit(diceimg3, (cordx+70, cordy))
+                            time.sleep(0.1)
+                            pygame.display.flip()
+
+                        if (dice1==1):
+                            screen.blit(diceimg1, (cordx, cordy))
+                        if (dice1==2):
+                            screen.blit(diceimg2, (cordx, cordy))
+                        if (dice1==3):
+                            screen.blit(diceimg3, (cordx, cordy))
+                        if (dice1==4):
+                            screen.blit(diceimg4, (cordx, cordy))
+                        if (dice1==5):
+                            screen.blit(diceimg5, (cordx, cordy))
+                        if (dice1==6):
+                            screen.blit(diceimg6, (cordx, cordy))
+
+                        if (dice2==1):
+                            screen.blit(diceimg1, (cordx+70, cordy))
+                        if (dice2==2):
+                            screen.blit(diceimg2, (cordx+70, cordy))
+                        if (dice2==3):
+                            screen.blit(diceimg3, (cordx+70, cordy))
+                        if (dice2==4):
+                            screen.blit(diceimg4, (cordx+70, cordy))
+                        if (dice2==5):
+                            screen.blit(diceimg5, (cordx+70, cordy))
+                        if (dice2==6):
+                            screen.blit(diceimg6, (cordx+70, cordy))
+                            
+                        pygame.display.flip()
+        
+        dice_value = []
+        dice_value.append(dice1)
+        dice_value.append(dice2)
+        return dice_value
 
 def load_color_images(screen):
     red = pygame.image.load("img/rojo.png").convert()
@@ -154,7 +175,7 @@ def select_color():
                 if event.key == pygame.K_TAB:
                     color_not_selected = False
 
-    time.sleep(2)
+    time.sleep(1)
     pygame.quit()
     return color_list[pointer]
         
@@ -165,6 +186,7 @@ def main():
     
     actual_message = ""
     turn_owner = ""
+    init_game = False
     
     while player.game_switch:
         
@@ -198,44 +220,72 @@ def main():
                 except:
                     username = raw_input("CLIENT: Enter your name: ")
                 player.sock.sendall(username)
+                player.username = username
                 player.data_received_server = []
 
             elif player.data_received_server[0] == 'repeated_username':
                 print "REPEATED USERNAME MESSAGE"
                 username = raw_input("CLIENT: Choose another username: ")
                 player.sock.sendall(username)
+                player.username = username
                 player.data_received_server = []
                 
             elif player.data_received_server[0] == 'get_color':
                 print "GET COLOR MESSAGE"
-                try:
-                    selected_color = select_color()
-                except:
-                    print "ERROR SELCTING COLOR"
+                selected_color = select_color()
                 player.sock.sendall(selected_color)
+                player.color = selected_color
                 player.data_received_server = []
                 
             elif player.data_received_server[0] == 'repeated_color':
                 print "REPEATED COLOR MESSAGE"
                 selected_color = select_color()
                 player.sock.sendall(selected_color)
+                player.color = selected_color
                 player.data_received_server = []
                 
-           elif player.data_received_server[0] == 'throw_dice_ft':
+            elif player.data_received_server[0] == 'throw_dice_ft':
                 print "THROW DICE FT MESSAGE"
-                try:
-                    screen = pygame.display.set_mode((415, 200))
-                    pygame.display.set_caption("Throw dice")
-                    pygame.init()
-                    dice_ft = Throw_dice(screen, 130, 70)
-                    pygame.quit()
-                except:
-                    print "ERROR SELCTING COLOR"
-                player.sock.sendall(dice_ft)
+                screen = pygame.display.set_mode((415, 200))
+                pygame.display.set_caption("Throw dice")
+                pygame.init()
+                dice_ft = []
+                dice_ft = player.throw_dice(screen, 130, 70)
+                time.sleep(1)
+                pygame.quit()
+                player.sock.sendall(str(dice_ft[0]+dice_ft[1]))
                 player.data_received_server = []
                 
-        
-    
+            elif player.data_received_server[0] == 'init':
+                print "INIT GAME MESSAGE"
+                pygame.init()
+                init_game = True
+                screen = pygame.display.set_mode((1100, 768))
+                pygame.display.set_caption("PARCHEESI")
+                screen.blit(pygame.image.load("img/parchis.png"), (0, 0))
+                pygame.display.flip()
+                player.data_received_server = []
+                player.sock.sendall("ack")
+                
+            elif player.data_received_server[0] == 'your_turn':
+                player.have_shift = True
+                #~ jugador.posee_turno = ""
+                #~ poseedor_act = ""
+                print "CLIENT: I own the turn"
+                player.data_received_server = []
+                
+        if init_game:
+            if player.firts_time_injail: 
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        game_switch = False
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_SPACE:
+                            for i in range(3):
+                                player.throw_dice(screen, 800, 35)
+                            print "FINE"
+                
         
 if __name__ == '__main__':
     main()

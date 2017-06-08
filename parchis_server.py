@@ -19,11 +19,14 @@ class TimeServer:
             sys.exit()
         self.server_sock.listen(5)
         self.maximun_players = 1
-        self.pieces_list = []
+        self.players_pieces_list = []
         self.connection_list = []
         self.players_list = {}
         self.players_color_list = {}
         self.players_first_turn = {}
+        self.active_game = True
+        self.player_active_turn = ""
+        self.shift_list = []
         
     def init_server(self):
         print "SERVER: Wating players {0} {1}".format(self.host, self.port)
@@ -72,6 +75,9 @@ class TimeServer:
             self.boot_match()
 
     def boot_match(self):
+        
+        threads = []
+        #NOMBRE DE USUARIO
         for sock in self.connection_list:
             if sock != self.server_sock:
                 sock.send("get_username ")
@@ -79,13 +85,13 @@ class TimeServer:
                 while player_username in self.players_list:
                     sock.send("repeated_username ")
                     player_username = sock.recv(1024)
-
                 self.players_list.update({player_username:sock})
-
+                
         print "SERVER: Players list: "
         for player in self.players_list:
             print "\t* ", player
             
+        #COLOR DE USUARIO
         for username, player_sock in self.players_list.iteritems():
             if player_sock != self.server_sock:
                 player_sock.send("get_color ")
@@ -98,31 +104,50 @@ class TimeServer:
         print "SERVER: Players color list: "
         for username, player_color in self.players_color_list.iteritems():
             print "\t* ", player_color
-            
+        
+        #PRIMERA TIRADA DE DADOS PARA DETERMINAR EL PRIMER TURNO
         for username, player_sock in self.players_list.iteritems():
             if player_sock != self.server_sock:
                 player_sock.send("throw_dice_ft ")
-                dice_ft = player_sock.recv(1024)
+                dice_ft = int(player_sock.recv(1024))
                 self.players_first_turn.update({username:dice_ft})
                 
-        print "SERVER: Players color list: "
+        print "SERVER: Players turn list: "
         for username, player_dice_ft in self.players_first_turn.iteritems():
             print "\t* ", player_dice_ft
+            
+        self.payer_active_turn = max(self.players_first_turn.keys())
+            
+        #INICIALIZAR CADA JUGADOR
+        for username, player_sock in self.players_list.iteritems():
+            ack = ""
+            if player_sock != self.server_sock:
+                while not(ack == "ack"):
+                    print "SERVER: player ", username, " has not yet stated"
+                    player_sock.send("init ")
+                    ack = player_sock.recv(1024)
+                print "SERVER: player ", username, " has stated"
+            player = threading.Thread(target = self.game, args = (username, ))
+            threads.append(player)
 
-        
-        #~ ack = ""
-        #~ threads = []
-        #~ for player_sock in self.connection_list:
-            #~ if player_sock != self.server_sock:
-                #~ gamer = threading.Thread(target = self., args = ())
-                #~ threads.append(jugador)
-                #~ print "SUCCES GAME"
+        for thread in threads:
+            thread.start()
 
-        #~ for thread in threads:
-            #~ thread.start()
-
-    def game(self):
-        pass
+    def game(self, username):
+        sock = self.players_list[username]
+        while self.active_game:
+            if username == self.player_active_turn:
+                time.sleep(2)
+                move = ""
+                while not(move != "ack" and move != ''):
+                    sock.send("your_turn ")
+                    move = sock.recv(1024)
+                move = jugada.split(" ")
+                
+                print "SERVER: Player ", username, " want to make the move: ", move
+                
+                if move[0] == "move":
+                    print "FINE"
 
 if __name__ == '__main__':
     server = TimeServer(str(sys.argv[1]), int(sys.argv[2]))
