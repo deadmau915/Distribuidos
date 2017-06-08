@@ -250,7 +250,7 @@ class Player:
     def out_jail_piece(self, screen, piece):
         piece['x'] = self.board_map[piece['bmps']]['x']
         piece['y'] = self.board_map[piece['bmps']]['y']
-        #~ pice['bmp'] = self.board_map[piece['bmps']].index()
+        pice['bmp'] = piece['bmps']
         piece[self.board_map[piece['bmps']]['coord_inc']] += self.board_map[piece['bmps']]['num_pie']*25
         self.board_map[piece['bmps']]['num_pie'] += 1
         screen.blit(sefl.allplayers_piecesimg_list[self.color][piece['id']], (piece['x'], piece['y']))
@@ -261,7 +261,14 @@ class Player:
         if dices[0] == dice[1]:
             for pieces in self.allplayers_pieces_list[self.color]:
                 for piece in pieces:
-                    out_jail_piece(screen, piece)
+                    #~ player.out_jail_piece(screen, piece)
+                    piece['x'] = self.board_map[piece['bmps']]['x']
+                    piece['y'] = self.board_map[piece['bmps']]['y']
+                    pice['bmp'] = piece['bmps']
+                    piece[self.board_map[piece['bmps']]['coord_inc']] += self.board_map[piece['bmps']]['num_pie']*25
+                    self.board_map[piece['bmps']]['num_pie'] += 1
+                    screen.blit(sefl.allplayers_piecesimg_list[self.color][piece['id']], (piece['x'], piece['y']))
+            pygame.display.flip()
                     
         
 
@@ -433,7 +440,7 @@ def main():
                                 for i in range(3):
                                     
                                     dices = player.throw_dice(screen, 800, 35)
-                                    out_jail(screen, dices)
+                                    player.out_jail(screen, dices)
                                     
                                 print "FINE"
                 

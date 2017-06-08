@@ -112,11 +112,9 @@ class TimeServer:
                 dice_ft = int(player_sock.recv(1024))
                 self.players_first_turn.update({username:dice_ft})
                 
-        print "SERVER: Players turn list: "
-        for username, player_dice_ft in self.players_first_turn.iteritems():
-            print "\t* ", player_dice_ft
-            
         self.payer_active_turn = max(self.players_first_turn.keys())
+        print "SERVER: Firts turn"
+        print "\t* ", self.payer_active_turn
             
         #INICIALIZAR CADA JUGADOR
         for username, player_sock in self.players_list.iteritems():
@@ -126,7 +124,7 @@ class TimeServer:
                     print "SERVER: player ", username, " has not yet stated"
                     player_sock.send("init ")
                     ack = player_sock.recv(1024)
-                print "SERVER: player ", username, " has stated"
+                print "SERVER: player ", username, " has started"
             player = threading.Thread(target = self.game, args = (username, ))
             threads.append(player)
 
