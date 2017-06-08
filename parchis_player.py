@@ -247,33 +247,16 @@ class Player:
                     screen.blit(self.allplayers_piecesimg_list[key][piece['id']], (piece['x'], piece['y']))
         pygame.display.flip()
         
-    def out_jail_piece(self, screen, piece):
-        piece['x'] = self.board_map[piece['bmps']]['x']
-        piece['y'] = self.board_map[piece['bmps']]['y']
-        piece['bmp'] = piece['bmps']
-        piece[self.board_map[piece['bmps']]['coord_inc']] += self.board_map[piece['bmps']]['num_pie']*25
-        self.board_map[piece['bmps']]['num_pie'] += 1
-        screen.blit(sefl.allplayers_piecesimg_list[self.color][piece['id']], (piece['x'], piece['y']))
+    def out_jail(self, screen, color):
+        pieces_list = self.allplayers_pieces_list[color]
+        for piece in pieces_list:
+            piece['x'] = self.board_map[piece['bmps']]['x']
+            piece['y'] = self.board_map[piece['bmps']]['y']
+            piece['bmp'] = piece['bmps']
+            piece[self.board_map[piece['bmps']]['coord_inc']] += self.board_map[piece['bmps']]['num_pie']*25
+            self.board_map[piece['bmps']]['num_pie'] += 1
+            screen.blit(self.allplayers_piecesimg_list[self.color][piece['id']], (piece['x'], piece['y']))
         pygame.display.flip()
-            
-        
-    def out_jail(self, screen, dices):
-        pieces_list = self.allplayers_pieces_list[self.color]
-        if dices[0] == dices[1]:
-            for piece in pieces_list:
-                piece['x'] = self.board_map[piece['bmps']]['x']
-                piece['y'] = self.board_map[piece['bmps']]['y']
-                piece['bmp'] = piece['bmps']
-                piece[self.board_map[piece['bmps']]['coord_inc']] += self.board_map[piece['bmps']]['num_pie']*25
-                self.board_map[piece['bmps']]['num_pie'] += 1
-                screen.blit(self.allplayers_piecesimg_list[self.color][piece['id']], (piece['x'], piece['y']))
-            pygame.display.flip()
-        #~ if dices[0] == dices[1]:
-            #~ for pieces in self.allplayers_pieces_list[self.color]:
-                #~ for piece in pieces:
-                    #~ player.out_jail_piece(screen, piece)
-                    
-        
 
 def load_color_images(screen):
     red = pygame.image.load("img/rojo.png").convert()
@@ -429,7 +412,14 @@ def main():
                 #~ jugador.posee_turno = ""
                 #~ poseedor_act = ""
                 print "CLIENT: I own the turn"
+                player.sock.sendall("ack")
                 player.data_received_server = []
+                
+            elif player.data_received_server[0] == 'player_jailout':
+                player.out_jail(screen, player.data_received_server[1])
+                player.sock.sendall("ack")
+                player.data_received_server = []
+                
                 
         if init_game:
             if player.have_shift:
@@ -443,7 +433,12 @@ def main():
                                 for i in range(3):
                                     
                                     dices = player.throw_dice(screen, 800, 35)
-                                    player.out_jail(screen, dices)
+                                    
+                                    if dices[0] == dices[1]:
+                                        player.out_jail(screen, player.color)
+                                        player.firts_time_injail = False 
+                                        player.soc.sendall("jail_out" + player.color)
+                                        player.have_shift = False
                                     
                                 print "FINE"
                 

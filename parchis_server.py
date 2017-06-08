@@ -18,7 +18,7 @@ class TimeServer:
             print(str(e))
             sys.exit()
         self.server_sock.listen(5)
-        self.maximun_players = 1
+        self.maximun_players = 2
         self.players_pieces_list = []
         self.connection_list = []
         self.players_list = {}
@@ -142,12 +142,17 @@ class TimeServer:
                 while not(move != "ack" and move != ''):
                     sock.send("your_turn ")
                     move = sock.recv(1024)
-                move = jugada.split(" ")
+                move = move.split(" ")
                 
                 print "SERVER: Player ", username, " want to make the move: ", move
                 
-                if move[0] == "move":
-                    print "FINE"
+                if move[0] == "jail_out":
+                    for username, player_sock in self.players_list.iteritems():
+                        if player_sock != sock:
+                            ack = ""
+                            while not(ack == "ack"):
+                                player_sock.send("player_jailout"+move[1])
+                                ack = player_sock.recv(1024)
 
 if __name__ == '__main__':
     server = TimeServer(str(sys.argv[1]), int(sys.argv[2]))
