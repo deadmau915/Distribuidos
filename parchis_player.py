@@ -255,7 +255,7 @@ class Player:
             piece['bmp'] = piece['bmps']
             piece[self.board_map[piece['bmps']]['coord_inc']] += self.board_map[piece['bmps']]['num_pie']*25
             self.board_map[piece['bmps']]['num_pie'] += 1
-            screen.blit(self.allplayers_piecesimg_list[self.color][piece['id']], (piece['x'], piece['y']))
+            screen.blit(self.allplayers_piecesimg_list[color][piece['id']], (piece['x'], piece['y']))
         pygame.display.flip()
 
 def load_color_images(screen):
@@ -437,7 +437,7 @@ def main():
                                     if dices[0] == dices[1]:
                                         player.out_jail(screen, player.color)
                                         player.firts_time_injail = False 
-                                        player.soc.sendall("jail_out" + player.color)
+                                        player.sock.sendall("jail_out " + player.color)
                                         player.have_shift = False
                                     
                                 print "FINE"

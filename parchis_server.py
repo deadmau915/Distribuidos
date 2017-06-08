@@ -18,7 +18,7 @@ class TimeServer:
             print(str(e))
             sys.exit()
         self.server_sock.listen(5)
-        self.maximun_players = 2
+        self.maximun_players = 3
         self.players_pieces_list = []
         self.connection_list = []
         self.players_list = {}
@@ -151,7 +151,7 @@ class TimeServer:
                         if player_sock != sock:
                             ack = ""
                             while not(ack == "ack"):
-                                player_sock.send("player_jailout"+move[1])
+                                player_sock.send("player_jailout "+move[1])
                                 ack = player_sock.recv(1024)
 
 if __name__ == '__main__':
