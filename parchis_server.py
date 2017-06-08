@@ -112,9 +112,11 @@ class TimeServer:
                 dice_ft = int(player_sock.recv(1024))
                 self.players_first_turn.update({username:dice_ft})
                 
-        self.payer_active_turn = max(self.players_first_turn.keys())
+        
+        self.player_active_turn = max(self.players_first_turn.keys())
+        
         print "SERVER: Firts turn"
-        print "\t* ", self.payer_active_turn
+        print "\t* ", self.player_active_turn
             
         #INICIALIZAR CADA JUGADOR
         for username, player_sock in self.players_list.iteritems():
