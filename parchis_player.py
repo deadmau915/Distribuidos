@@ -8,6 +8,99 @@ import pickle
 
 WINDOW_DIMENSIONS = (1100, 768)
 
+ALL_PIECES_LIST = { 
+'yellow': [{'id':0, 'x':0, 'y':0, 'bmp':5, 'bmps':5, 'jail':True, 'jail_pos':[555, 600]},
+	      {'id':1, 'x':0, 'y':0, 'bmp':5, 'bmps':5, 'jail':True, 'jail_pos':[690, 600]},
+	      {'id':2, 'x':0, 'y':0, 'bmp':5, 'bmps':5, 'jail':True, 'jail_pos':[560, 665]},
+	      {'id':3, 'x':0, 'y':0, 'bmp':5, 'bmps':5, 'jail':True, 'jail_pos':[685, 665]}],
+          
+'red': [{'id':0, 'x':0, 'y':0, 'bmp':39, 'bmps':39, 'jail':True, 'jail_pos':[70, 90]},
+	      {'id':1, 'x':0, 'y':0, 'bmp':39, 'bmps':39, 'jail':True, 'jail_pos':[185, 90]},
+	      {'id':2, 'x':0, 'y':0, 'bmp':39, 'bmps':39, 'jail':True, 'jail_pos':[70, 150]},
+	      {'id':3, 'x':0, 'y':0, 'bmp':39, 'bmps':39, 'jail':True, 'jail_pos':[185, 150]}],
+          
+'green': [{'id':0, 'x':0, 'y':0, 'bmp':56, 'bmps':56, 'jail':True, 'jail_pos':[70, 600]},
+	      {'id':1, 'x':0, 'y':0, 'bmp':56, 'bmps':56, 'jail':True, 'jail_pos':[185, 600]},
+	      {'id':2, 'x':0, 'y':0, 'bmp':56, 'bmps':56, 'jail':True, 'jail_pos':[70, 665]},
+	      {'id':3, 'x':0, 'y':0, 'bmp':56, 'bmps':56, 'jail':True, 'jail_pos':[185, 665]}],
+          
+'blue': [{'id':0, 'x':0, 'y':0, 'bmp':22, 'bmps':22, 'jail':True, 'jail_pos':[565, 90]},
+	      {'id':1, 'x':0, 'y':0, 'bmp':22, 'bmps':22, 'jail':True, 'jail_pos':[680, 90]},
+	      {'id':2, 'x':0, 'y':0, 'bmp':22, 'bmps':22, 'jail':True, 'jail_pos':[565, 150]},
+	      {'id':3, 'x':0, 'y':0, 'bmp':22, 'bmps':22, 'jail':True, 'jail_pos':[680, 150]}]
+}
+
+BOARD_MAP = [{'x':-1, 'y':-1, 'secure':False, 'entry':None, 'num_pie':-1, 'coord_inc':-1},
+{'x':430, 'y':735, 'secure':False, 'num_pie':0, 'coord_inc':'x'},
+{'x':430, 'y':695, 'secure':False, 'num_pie':0, 'coord_inc':'x'},
+{'x':430, 'y':660, 'secure':False, 'num_pie':0, 'coord_inc':'x'},
+{'x':430, 'y':625, 'secure':False, 'num_pie':0, 'coord_inc':'x'},
+{'x':430, 'y':590, 'secure':True,  'num_pie':0, 'coord_inc':'x'},
+{'x':430, 'y':555, 'secure':False, 'num_pie':0, 'coord_inc':'x'},
+{'x':430, 'y':520, 'secure':False, 'num_pie':0, 'coord_inc':'x'},
+{'x':430, 'y':485, 'secure':False, 'num_pie':0, 'coord_inc':'x'},
+{'x':485, 'y':425, 'secure':False, 'num_pie':0, 'coord_inc':'y'},
+{'x':520, 'y':427, 'secure':False, 'num_pie':0, 'coord_inc':'y'},
+{'x':555, 'y':427, 'secure':False, 'num_pie':0, 'coord_inc':'y'},
+{'x':590, 'y':427, 'secure':True,  'num_pie':0, 'coord_inc':'y'},
+{'x':625, 'y':427, 'secure':False, 'num_pie':0, 'coord_inc':'y'},
+{'x':670, 'y':427, 'secure':False, 'num_pie':0, 'coord_inc':'y'},
+{'x':695, 'y':427, 'secure':False, 'num_pie':0, 'coord_inc':'y'},
+{'x':735, 'y':427, 'secure':False,  'num_pie':0, 'coord_inc':'y'},
+{'x':735, 'y':345, 'secure':True,  'num_pie':0, 'coord_inc':'y'},
+{'x':730, 'y':265, 'secure':False,  'num_pie':0, 'coord_inc':'y'},
+{'x':695, 'y':265, 'secure':False,  'num_pie':0, 'coord_inc':'y'},
+{'x':660, 'y':265, 'secure':False,  'num_pie':0, 'coord_inc':'y'},
+{'x':625, 'y':265, 'secure':False,  'num_pie':0, 'coord_inc':'y'},
+{'x':590, 'y':265, 'secure':True,  'num_pie':0, 'coord_inc':'y'},
+{'x':555, 'y':265, 'secure':False,  'num_pie':0, 'coord_inc':'y'},
+{'x':520, 'y':265, 'secure':False,  'num_pie':0, 'coord_inc':'y'},
+{'x':485, 'y':280, 'secure':False,  'num_pie':0, 'coord_inc':'y'},
+{'x':430, 'y':260, 'secure':False,  'num_pie':0, 'coord_inc':'x'},
+{'x':430, 'y':225, 'secure':False,  'num_pie':0, 'coord_inc':'x'},
+{'x':430, 'y':190, 'secure':False,  'num_pie':0, 'coord_inc':'x'},
+{'x':430, 'y':155, 'secure':True,  'num_pie':0, 'coord_inc':'x'},
+{'x':430, 'y':120, 'secure':False,  'num_pie':0, 'coord_inc':'x'},
+{'x':430, 'y':95, 'secure':False,  'num_pie':0, 'coord_inc':'x'},
+{'x':430, 'y':60, 'secure':False,  'num_pie':0, 'coord_inc':'x'},
+{'x':430, 'y':20, 'secure':False,  'num_pie':0, 'coord_inc':'x'},
+{'x':345, 'y':20, 'secure':True,  'num_pie':0, 'coord_inc':'x'},
+{'x':265, 'y':20, 'secure':False,  'num_pie':0, 'coord_inc':'x'},
+{'x':265, 'y':55, 'secure':False,  'num_pie':0, 'coord_inc':'x'},
+{'x':265, 'y':90, 'secure':False,  'num_pie':0, 'coord_inc':'x'},
+{'x':265, 'y':125, 'secure':False,  'num_pie':0, 'coord_inc':'x'},
+{'x':265, 'y':160, 'secure':True,  'num_pie':0, 'coord_inc':'x'},
+{'x':265, 'y':195, 'secure':False,  'num_pie':0, 'coord_inc':'x'},
+{'x':265, 'y':230, 'secure':False,  'num_pie':0, 'coord_inc':'x'},
+{'x':280, 'y':263, 'secure':False,  'num_pie':0, 'coord_inc':'x'},
+{'x':260, 'y':280, 'secure':False,  'num_pie':0, 'coord_inc':'y'},
+{'x':235, 'y':265, 'secure':False,  'num_pie':0, 'coord_inc':'y'},
+{'x':195, 'y':265, 'secure':False,  'num_pie':0, 'coord_inc':'y'},
+{'x':160, 'y':265, 'secure':True,  'num_pie':0, 'coord_inc':'y'},
+{'x':125, 'y':265, 'secure':False,  'num_pie':0, 'coord_inc':'y'},
+{'x':90, 'y':265, 'secure':False,  'num_pie':0, 'coord_inc':'y'},
+{'x':55, 'y':265, 'secure':False,  'num_pie':0, 'coord_inc':'y'},
+{'x':20, 'y':265, 'secure':False,  'num_pie':0, 'coord_inc':'y'},
+{'x':20, 'y':345, 'secure':True,  'num_pie':0, 'coord_inc':'y'},
+{'x':20, 'y':430, 'secure':False,  'num_pie':0, 'coord_inc':'y'},
+{'x':55, 'y':430, 'secure':False,  'num_pie':0, 'coord_inc':'y'},
+{'x':90, 'y':430, 'secure':False,  'num_pie':0, 'coord_inc':'y'},
+{'x':125, 'y':430, 'secure':False,  'num_pie':0, 'coord_inc':'y'},
+{'x':160, 'y':430, 'secure':True,  'num_pie':0, 'coord_inc':'y'},
+{'x':195, 'y':430, 'secure':False,  'num_pie':0, 'coord_inc':'y'},
+{'x':230, 'y':430, 'secure':False,  'num_pie':0, 'coord_inc':'y'},
+{'x':265, 'y':430, 'secure':False,  'num_pie':0, 'coord_inc':'y'},
+{'x':280, 'y':485, 'secure':False,  'num_pie':0, 'coord_inc':'x'},
+{'x':265, 'y':515, 'secure':False,  'num_pie':0, 'coord_inc':'x'},
+{'x':265, 'y':550, 'secure':False,  'num_pie':0, 'coord_inc':'x'},
+{'x':265, 'y':585, 'secure':True,  'num_pie':0, 'coord_inc':'x'},
+{'x':265, 'y':620, 'secure':False,  'num_pie':0, 'coord_inc':'x'},
+{'x':265, 'y':655, 'secure':False,  'num_pie':0, 'coord_inc':'x'},
+{'x':265, 'y':690, 'secure':False,  'num_pie':0, 'coord_inc':'x'},
+{'x':265, 'y':725, 'secure':False,  'num_pie':0, 'coord_inc':'x'},
+{'x':345, 'y':725, 'secure':True,  'num_pie':0, 'coord_inc':'x'}
+]
+
 class Player:
     def __init__(self):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -18,9 +111,9 @@ class Player:
         self.username = ""
         self.have_shift = False
         self.firts_time_injail = True
-        self.allplayers_pieces_list = []
+        self.allplayers_pieces_list = {}
         self.board_map = []
-        self.allplayers_piecesimg_list = []
+        self.allplayers_piecesimg_list = {}
 
     def connect(self, host, port):
         print "CONNECTING TO {0} {1}".format(host, port)
@@ -49,8 +142,6 @@ class Player:
         diceimg5 = pygame.image.load("img/dado5.png").convert_alpha()
         diceimg6 = pygame.image.load("img/dado6.png").convert_alpha()
         
-        screen.blit(diceimg1,(cordx, cordy))
-        screen.blit(diceimg1, (cordx+70, cordy))
         pygame.display.flip()
         dice1 = random.randint(1,6)
         dice2 = random.randint(1,6)
@@ -121,6 +212,58 @@ class Player:
         dice_value.append(dice1)
         dice_value.append(dice2)
         return dice_value
+        
+    def load_pieces_images(self):
+        all_players_pieces_list = {}
+        ficha_roja1 = pygame.image.load("img/ficha_roja.png").convert_alpha()
+        ficha_roja2 = pygame.image.load("img/ficha_roja.png").convert_alpha()
+        ficha_roja3 = pygame.image.load("img/ficha_roja.png").convert_alpha()
+        ficha_roja4 = pygame.image.load("img/ficha_roja.png").convert_alpha()
+        ficha_amarilla1 = pygame.image.load("img/ficha_amarilla.png").convert_alpha()
+        ficha_amarilla2 = pygame.image.load("img/ficha_amarilla.png").convert_alpha()
+        ficha_amarilla3 = pygame.image.load("img/ficha_amarilla.png").convert_alpha()
+        ficha_amarilla4 = pygame.image.load("img/ficha_amarilla.png").convert_alpha()
+        ficha_verde1 = pygame.image.load("img/ficha_verde.png").convert_alpha()
+        ficha_verde2 = pygame.image.load("img/ficha_verde.png").convert_alpha()
+        ficha_verde3 = pygame.image.load("img/ficha_verde.png").convert_alpha()
+        ficha_verde4 = pygame.image.load("img/ficha_verde.png").convert_alpha()
+        ficha_azul1 = pygame.image.load("img/ficha_azul.png").convert_alpha()
+        ficha_azul2 = pygame.image.load("img/ficha_azul.png").convert_alpha()
+        ficha_azul3 = pygame.image.load("img/ficha_azul.png").convert_alpha()
+        ficha_azul4 = pygame.image.load("img/ficha_azul.png").convert_alpha()
+        self.allplayers_piecesimg_list = { 
+        "red":[ficha_roja1, ficha_roja2, ficha_roja3, ficha_roja4],
+        "yellow":[ficha_amarilla1, ficha_amarilla2, ficha_amarilla3, ficha_amarilla4],
+        "green":[ficha_verde1, ficha_verde2, ficha_verde3, ficha_verde4],
+        "blue":[ficha_azul1, ficha_azul2, ficha_azul3, ficha_azul4]
+        }
+        
+    def show_players_pieces(self, screen):
+        for key, players_pieces_list in self.allplayers_pieces_list.iteritems():
+            for piece in players_pieces_list:
+                if piece['jail']:
+                    screen.blit(self.allplayers_piecesimg_list[key][piece['id']], piece['jail_pos'])
+                else:
+                    screen.blit(self.allplayers_piecesimg_list[key][piece['id']], (piece['x'], piece['y']))
+        pygame.display.flip()
+        
+    def out_jail_piece(self, screen, piece):
+        piece['x'] = self.board_map[piece['bmps']]['x']
+        piece['y'] = self.board_map[piece['bmps']]['y']
+        #~ pice['bmp'] = self.board_map[piece['bmps']].index()
+        piece[self.board_map[piece['bmps']]['coord_inc']] += self.board_map[piece['bmps']]['num_pie']*25
+        self.board_map[piece['bmps']]['num_pie'] += 1
+        screen.blit(sefl.allplayers_piecesimg_list[self.color][piece['id']], (piece['x'], piece['y']))
+        pygame.display.flip()
+            
+        
+    def out_jail(self, screen, dices):
+        if dices[0] == dice[1]:
+            for pieces in self.allplayers_pieces_list[self.color]:
+                for piece in pieces:
+                    out_jail_piece(screen, piece)
+                    
+        
 
 def load_color_images(screen):
     red = pygame.image.load("img/rojo.png").convert()
@@ -264,6 +407,10 @@ def main():
                 pygame.display.set_caption("PARCHEESI")
                 screen.blit(pygame.image.load("img/parchis.png"), (0, 0))
                 pygame.display.flip()
+                player.load_pieces_images()
+                player.allplayers_pieces_list = ALL_PIECES_LIST
+                player.board_map = BOARD_MAP
+                player.show_players_pieces(screen)
                 player.data_received_server = []
                 player.sock.sendall("ack")
                 
@@ -275,16 +422,20 @@ def main():
                 player.data_received_server = []
                 
         if init_game:
-            if player.firts_time_injail: 
-                for event in pygame.event.get():
-                    if event.type == pygame.QUIT:
-                        pygame.quit()
-                        game_switch = False
-                    if event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_SPACE:
-                            for i in range(3):
-                                player.throw_dice(screen, 800, 35)
-                            print "FINE"
+            if player.have_shift:
+                if player.firts_time_injail: 
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            pygame.quit()
+                            game_switch = False
+                        if event.type == pygame.KEYDOWN:
+                            if event.key == pygame.K_SPACE:
+                                for i in range(3):
+                                    
+                                    dices = player.throw_dice(screen, 800, 35)
+                                    out_jail(screen, dices)
+                                    
+                                print "FINE"
                 
         
 if __name__ == '__main__':
